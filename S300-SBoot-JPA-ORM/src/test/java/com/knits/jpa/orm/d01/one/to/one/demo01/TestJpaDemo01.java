@@ -38,6 +38,8 @@ public class TestJpaDemo01 {
         Office office = new Office();
         office.setCity("A Mock City");
         office.setStreet("A Mock Street");
+
+        //connect them
         user.setOffice(office);
 
         userRepository.save(user);

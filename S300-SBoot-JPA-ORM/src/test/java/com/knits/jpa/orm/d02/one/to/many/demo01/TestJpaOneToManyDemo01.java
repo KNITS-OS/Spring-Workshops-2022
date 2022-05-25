@@ -57,10 +57,8 @@ public class TestJpaOneToManyDemo01 {
         employeeRepository.save(employee2);
         Project savedProject =projectRepository.save(project);
 
-        Project foundProject =projectRepository.findById(savedProject.getId()).get();
-
-        log.info("Employees for Project: {} ",foundProject.getName());
-        foundProject.getEmployees().forEach(emp -> log.info("Employee Found: {} ",emp.getFirstName()));
+        log.info("Employees for Project: {} ",savedProject.getName());
+        savedProject.getEmployees().forEach(emp -> log.info("Employee Found: {} ",emp.getFirstName()));
 
     }
 }
