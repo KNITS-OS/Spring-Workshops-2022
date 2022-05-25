@@ -49,7 +49,7 @@ public class TestJpaManyToManyDemo01 {
         group.setName("A Mock Group Name");
 
         Group group2 = new Group();
-        group.setName("Another Mock Group Name");
+        group2.setName("Another Mock Group Name");
 
         //emp 1 and 2 are in group1
         employee.getGroups().add(group);
