@@ -3,6 +3,8 @@ package com.knits.jpa.orm.d02.one.to.many.demo01;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,4 +16,7 @@ public class Project {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "project")
+    private List<Employee> employees= new ArrayList<>();
 }
