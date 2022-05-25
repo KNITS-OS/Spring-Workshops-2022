@@ -15,6 +15,11 @@ spring:
   application:
     name: Product
     debug: enabled
+
+  datasource:
+    username: "knits-orm"
+    password: "jpa-tutorial"
+
   jpa:
     database: postgresql
     hibernate:

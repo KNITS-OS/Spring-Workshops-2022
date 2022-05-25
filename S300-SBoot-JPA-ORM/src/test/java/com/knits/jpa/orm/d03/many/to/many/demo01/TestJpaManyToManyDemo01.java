@@ -12,15 +12,12 @@ import org.springframework.test.context.TestPropertySource;
 
 
 @DataJpaTest
-@ComponentScan("com.knits.jpa.orm.d03.many.to.many.demo01")
 @EntityScan("com.knits.jpa.orm.d03.many.to.many.demo01")
 @EnableJpaRepositories("com.knits.jpa.orm.d03.many.to.many.demo01")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
-        "spring.datasource.url=jdbc:postgresql://localhost:5432/JPA-ORM-03",
-        "spring.datasource.username=knits-orm",
-        "spring.datasource.password=jpa-tutorial"
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/JPA-ORM-03"
 })
 public class TestJpaManyToManyDemo01 {
 

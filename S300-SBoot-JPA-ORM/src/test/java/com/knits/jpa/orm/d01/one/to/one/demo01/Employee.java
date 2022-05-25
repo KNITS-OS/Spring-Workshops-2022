@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "employee")
 @Data
 public class Employee {
 
@@ -16,5 +17,8 @@ public class Employee {
     private String firstName;
 
     private String lastName;
+
+    @OneToOne
+    private Office office;
 
 }

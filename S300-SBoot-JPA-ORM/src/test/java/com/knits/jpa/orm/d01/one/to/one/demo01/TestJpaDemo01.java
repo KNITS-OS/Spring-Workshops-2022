@@ -12,15 +12,12 @@ import org.springframework.test.context.TestPropertySource;
 
 
 @DataJpaTest
-@ComponentScan("com.knits.jpa.orm.d01.one.to.one.demo01")
-@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo01")
-@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo01")
+@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo01") //otherwise finds all other entities in subpackages
+@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo01") //otherwise doesnt create jpa repositories instances
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
-        "spring.datasource.url=jdbc:postgresql://localhost:5432/JPA-ORM-01",
-        "spring.datasource.username=knits-orm",
-        "spring.datasource.password=jpa-tutorial"
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/JPA-ORM-01"
 })
 public class TestJpaDemo01 {
 
@@ -41,6 +38,7 @@ public class TestJpaDemo01 {
         Office office = new Office();
         office.setCity("A Mock City");
         office.setStreet("A Mock Street");
+        user.setOffice(office);
 
         userRepository.save(user);
         officeRepository.save(office);
