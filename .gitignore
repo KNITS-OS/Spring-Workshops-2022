@@ -1,3 +1,7 @@
 .idea/**
 **/target/**
 *.iml
+**.idea/**
+S400-SBoot-JPA-Queries/.idea/jarRepositories.xml
+*/.idea/**
+*/.mvn/**
