@@ -8,10 +8,7 @@ import javax.persistence.*;
 @Table(name = "employee")
 @Data
 public class Employee {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     private String firstName;
@@ -19,6 +16,8 @@ public class Employee {
     private String lastName;
 
     @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
     private Office office;
 
 }

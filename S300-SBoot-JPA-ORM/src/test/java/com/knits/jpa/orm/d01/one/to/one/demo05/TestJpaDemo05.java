@@ -1,4 +1,4 @@
-package com.knits.jpa.orm.d01.one.to.one.demo02;
+package com.knits.jpa.orm.d01.one.to.one.demo05;
 
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
@@ -13,24 +13,17 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
-// One to one with shared primary key
-// TODO: The issue is that when we use shared primary key
-//  one table wont have the id column which reflect on other test runners
-// Fixed by using JoinColumn annotation
+// One to one bidirectional relationship join table
 
 @DataJpaTest
-@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo02") //otherwise finds all other entities in subpackages
-@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo02") //otherwise doesnt create jpa repositories instances
+@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo05") //otherwise finds all other entities in subpackages
+@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo05") //otherwise doesnt create jpa repositories instances
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
         "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_data_orm"
 })
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestJpaDemo02 {
-//    @Autowired
-//    private JdbcTemplate jdbcTemplate;
-
+public class TestJpaDemo05 {
     @Autowired
     private EmployeeRepository userRepository;
 
@@ -93,16 +86,16 @@ public class TestJpaDemo02 {
 
     @Test
     @Rollback(value = false)
-    public void updateUserByOffice() {
+    public void updateOfficeByUser() {
         Faker faker = new Faker();
 
         Map<String, Object> created = createFakeEmployeeAndOffice();
 
-        // get saved office
-        Office office = (Office) created.get("office");
+        // get saved employee
+        Employee user = (Employee) created.get("user");
 
         // find the office that belongs to him
-        Employee user = userRepository.getEmployeeByOffice(office);
+        Office office = user.getOffice();
 //        System.out.println(user.getFirstName());
 
         // update it
@@ -112,14 +105,14 @@ public class TestJpaDemo02 {
 
     @Test
     @Rollback(value = false)
-    public void deleteUserByOffice() {
+    public void deleteOfficeByUser() {
         Map<String, Object> created = createFakeEmployeeAndOffice();
 
-        // get saved office
-        Office office = (Office) created.get("office");
+        // get saved employee
+        Employee user = (Employee) created.get("user");
 
         // find the office that belongs to him
-        Employee user = userRepository.getEmployeeByOffice(office);
+        Office office = user.getOffice();
 //        System.out.println(user.getId());
 
         // delete it
@@ -128,14 +121,14 @@ public class TestJpaDemo02 {
 
     @Test
     @Rollback(value = false)
-    public void findUserByOffice() {
+    public void findOfficeByUser() {
         Map<String, Object> created = createFakeEmployeeAndOffice();
 
-        // get saved user
-        Office office = (Office) created.get("office");
+        // get saved employee
+        Employee user = (Employee) created.get("user");
 
         // find the office that belongs to him
-        Employee user = userRepository.getEmployeeByOffice(office);
+        Office office = user.getOffice();
 //        System.out.println(user.toString());
     }
 }

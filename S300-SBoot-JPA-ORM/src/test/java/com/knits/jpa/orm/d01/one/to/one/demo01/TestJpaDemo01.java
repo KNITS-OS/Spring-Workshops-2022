@@ -1,6 +1,7 @@
 package com.knits.jpa.orm.d01.one.to.one.demo01;
 
 import com.github.javafaker.Faker;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -8,8 +9,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +25,9 @@ import java.util.Map;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
-        "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_jpa_orm"
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_data_orm"
 })
 public class TestJpaDemo01 {
-
     @Autowired
     private EmployeeRepository userRepository;
 
@@ -78,7 +80,7 @@ public class TestJpaDemo01 {
 
     @Test
     @Rollback(value = false)
-    public void initDatabase() {
+    public void createEmployeeOffice() {
         createFakeEmployeeAndOffice(
                 "Stefano",
                 "Fiorenza",

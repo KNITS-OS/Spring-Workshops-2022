@@ -1,4 +1,4 @@
-package com.knits.jpa.orm.d01.one.to.one.demo02;
+package com.knits.jpa.orm.d01.one.to.one.demo03;
 
 import lombok.Data;
 import org.springframework.lang.Nullable;
@@ -18,6 +18,4 @@ public class Office {
 
     private String street;
 
-    @OneToOne(mappedBy = "office")
-    private Employee employee;
 }

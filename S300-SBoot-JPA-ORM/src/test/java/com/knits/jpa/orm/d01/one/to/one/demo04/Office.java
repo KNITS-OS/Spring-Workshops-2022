@@ -1,7 +1,6 @@
-package com.knits.jpa.orm.d01.one.to.one.demo02;
+package com.knits.jpa.orm.d01.one.to.one.demo04;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
