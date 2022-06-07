@@ -1,25 +1,20 @@
-package com.knits.jpa.orm.d01.one.to.one.demo01;
+package com.knits.jpa.orm.d01.one.to.one.demo02;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Map;
 
 @Entity
-@Table(name = "employee")
 @Data
-public class Employee {
+public class Office {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    private String firstName;
+    private String city;
 
-    private String lastName;
-
-    @OneToOne
-    private Office office;
+    private String street;
 
 }

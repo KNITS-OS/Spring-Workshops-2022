@@ -1,4 +1,4 @@
-package com.knits.jpa.orm.d01.one.to.one.demo01;
+package com.knits.jpa.orm.d01.one.to.one.demo02;
 
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
@@ -24,7 +23,7 @@ import java.util.Map;
         "spring.jpa.hibernate.ddl-auto=update",
         "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_jpa_orm"
 })
-public class TestJpaDemo01 {
+public class TestJpaDemo02 {
 
     @Autowired
     private EmployeeRepository userRepository;

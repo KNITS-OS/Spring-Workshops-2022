@@ -1,9 +1,8 @@
-package com.knits.jpa.orm.d01.one.to.one.demo01;
+package com.knits.jpa.orm.d01.one.to.one.demo02;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Map;
 
 @Entity
 @Table(name = "employee")
