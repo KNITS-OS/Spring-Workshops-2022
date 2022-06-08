@@ -1,52 +1,50 @@
 package com.knits.product.controller;
 
-import com.knits.product.dto.ExceptionDto;
-import com.knits.product.exception.AppException;
-import com.knits.product.exception.ExceptionCodes;
-import com.knits.product.exception.SystemException;
-import com.knits.product.exception.UserException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.knits.product.dto.Mocks;
+import com.knits.product.dto.UserDto;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@ControllerAdvice
-@Slf4j
+import static com.knits.product.controller.Demo04ResponseController.*;
+import static com.knits.product.exception.ExceptionCodes.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest()
 public class ExceptionControllerTest {
 
+    @Autowired
+    private MockMvc mockMvc;
 
-    @ExceptionHandler(UserException.class)
-    @ResponseBody
-    public ResponseEntity<ExceptionDto> handleUserException(UserException ex) {
-        return wrapIntoResponseEntity(ex, HttpStatus.BAD_REQUEST);
+    private ObjectMapper om = new ObjectMapper();
+
+    @Test
+    public void testExceptionManagement() throws Exception {
+
+        testTemplate(duplicateUser,BAD_REQUEST.value(),USER_ALREADY_EXISTS);
+        testTemplate(systemException,INTERNAL_SERVER_ERROR.value(),DB_TABLE_LOCKED);
+        testTemplate(uncaughtException,INTERNAL_SERVER_ERROR.value(),UNMAPPED_EXCEPTION_CODE);
+
     }
 
-    @ExceptionHandler(SystemException.class)
-    @ResponseBody
-    public ResponseEntity<ExceptionDto> handleSystemException(SystemException ex) {
-        return wrapIntoResponseEntity(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    private void testTemplate (Long userId, int statusCode, int expectedCode) throws Exception{
+        UserDto userToSave = Mocks.mockUser(userId);
+
+        ResultActions resultActions = mockMvc.perform(post("/api/users/")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(userToSave)))
+                .andExpect(status().is(statusCode))
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(expectedCode));
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    public ResponseEntity<ExceptionDto> handleAllExceptions(Exception ex) {
-        log.error(ex.getMessage(),ex);
-        ExceptionDto exDto = new ExceptionDto(ExceptionCodes.UNMAPPED_EXCEPTION_CODE,ex.getMessage());
-        return wrapIntoResponseEntity(exDto, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    private ResponseEntity<ExceptionDto> wrapIntoResponseEntity (AppException ex, HttpStatus status){
-        log.error(ex.getMessage(),ex);
-        return ResponseEntity
-                .status(status)
-                .body(new ExceptionDto(ex));
-    }
-
-    private ResponseEntity<ExceptionDto> wrapIntoResponseEntity (ExceptionDto exDto, HttpStatus status){
-        return ResponseEntity
-                .status(status)
-                .body(exDto);
-    }
 }

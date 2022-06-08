@@ -20,11 +20,6 @@ public class Demo02RequestMappingController {
 		return "Get request param value="+id;
 	}
 
-	@RequestMapping(value = "/basic/path/io/params")
-	public String getValueWithRequestParamVariablesAsObject(@RequestParam("id") long id) {
-		return "Get request param value="+id;
-	}
-
 	@RequestMapping(value = { "/basic/demo/io/headers"})
 	public String getValueMultiplePathMapping( 
 			@RequestHeader("Accept-Encoding") String encoding,
@@ -44,12 +39,12 @@ public class Demo02RequestMappingController {
 		return "default mapping";
 	}
 
-	@RequestMapping(value = "*")
+	@RequestMapping(value = "/other/*")
 	public String getFallback() {
 		return "Fallback for GET Requests";
 	}
 	
-	@RequestMapping(value = "*", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/all-methods/*", method = { RequestMethod.GET, RequestMethod.POST })
 		public String allFallback() {
 		return "Fallback for All Requests";
 	}

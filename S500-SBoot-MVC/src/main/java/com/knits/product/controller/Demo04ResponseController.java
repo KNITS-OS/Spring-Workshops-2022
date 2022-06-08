@@ -1,6 +1,11 @@
 package com.knits.product.controller;
 
+import com.knits.product.dto.Mocks;
 import com.knits.product.dto.UserDto;
+import com.knits.product.exception.AppException;
+import com.knits.product.exception.ExceptionCodes;
+import com.knits.product.exception.SystemException;
+import com.knits.product.exception.UserException;
 import com.knits.product.util.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -20,6 +25,9 @@ import java.util.List;
 public class Demo04ResponseController {
 
 
+    public static final Long duplicateUser=-100L;
+    public static final Long systemException=-200L;
+    public static final Long uncaughtException=-300L;
 
     @GetMapping(value = "/users/{id}", produces = {"application/json"})
     public ResponseEntity<UserDto> getUserById(@PathVariable(value = "id", required = true) final Long id) {
@@ -29,7 +37,7 @@ public class Demo04ResponseController {
 
         return ResponseEntity
                 .ok()
-                .body(mockUser(id));
+                .body(Mocks.mockUser(id));
     }
 
 
@@ -39,13 +47,25 @@ public class Demo04ResponseController {
 
         return ResponseEntity
                 .ok()
-                .body(List.of(mockUser(1L)));
+                .body(List.of(Mocks.mockUser(1L)));
     }
 
 
     @PostMapping(value = "/users", produces = {"application/json"}, consumes = { "application/json"})
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDTO) {
         log.debug("REST request to createUser User ");
+
+        if (userDTO.getId().longValue()==duplicateUser){
+            throw new UserException("User already exists",ExceptionCodes.USER_ALREADY_EXISTS);
+        }
+
+        if (userDTO.getId().longValue()==systemException){
+            throw new SystemException("Something wrong happened inside system",ExceptionCodes.DB_TABLE_LOCKED);
+        }
+
+        if (userDTO.getId().longValue()==uncaughtException){
+            throw new RuntimeException("Something unmanaged happened here");
+        }
         return ResponseEntity
                 .ok()
                 .body(userDTO);
@@ -76,17 +96,6 @@ public class Demo04ResponseController {
         return ResponseEntity.noContent().build();
     }
 
-    private UserDto mockUser (Long id){
-        UserDto userFound = new UserDto();
-        userFound.setId(id);
-        userFound.setFirstName("Stefano");
-        userFound.setLastName("Fiorenza");
-        userFound.setActive(true);
-        userFound.setLogin("stefano.fiorenza");
-        userFound.setPassword(null);
-        userFound.setEmail("stefano.fiorenza@email.it");
-        return userFound;
-    }
 
 
 

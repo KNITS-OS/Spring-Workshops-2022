@@ -6,4 +6,6 @@ public class ExceptionCodes {
     public static final String INTERNAL_EX_MESSAGE="Internal System Exception. Contact administrator if problem persists";
 
     public static final int USER_NOT_FOUND=-101;
+    public static final int USER_ALREADY_EXISTS=-201;
+    public static final int DB_TABLE_LOCKED=-301;
 }
