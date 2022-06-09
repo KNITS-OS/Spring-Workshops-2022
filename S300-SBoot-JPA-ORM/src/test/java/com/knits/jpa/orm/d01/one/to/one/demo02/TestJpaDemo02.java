@@ -1,33 +1,36 @@
-package com.knits.jpa.orm.d01.one.to.one.demo01;
+package com.knits.jpa.orm.d01.one.to.one.demo02;
 
 import com.github.javafaker.Faker;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-// One to one with foreign key
+// One to one with shared primary key
+// TODO: The issue is that when we use shared primary key
+//  one table wont have the id column which reflect on other test runners
+// Fixed by using JoinColumn annotation
 
 @DataJpaTest
-@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo01") //otherwise finds all other entities in subpackages
-@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo01") //otherwise doesnt create jpa repositories instances
+@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo02") //otherwise finds all other entities in subpackages
+@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo02") //otherwise doesnt create jpa repositories instances
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
         "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_data_orm"
 })
-public class TestJpaDemo01 {
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class TestJpaDemo02 {
+//    @Autowired
+//    private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private EmployeeRepository userRepository;
 

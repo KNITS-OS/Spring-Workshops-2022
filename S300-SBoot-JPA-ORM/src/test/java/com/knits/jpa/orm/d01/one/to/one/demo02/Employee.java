@@ -1,18 +1,14 @@
-package com.knits.jpa.orm.d01.one.to.one.demo01;
+package com.knits.jpa.orm.d01.one.to.one.demo02;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Map;
 
 @Entity
 @Table(name = "employee")
 @Data
 public class Employee {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     private String firstName;
@@ -20,7 +16,8 @@ public class Employee {
     private String lastName;
 
     @OneToOne
-    @JoinColumn(name = "office_id")
+    @MapsId
+    @JoinColumn(name = "id")
     private Office office;
 
 }
