@@ -1,4 +1,4 @@
-package com.knits.jpa.orm.d03.many.to.many.demo01;
+package com.knits.jpa.orm.d03.many.to.many.demo02;
 
 import lombok.Data;
 
@@ -20,12 +20,8 @@ public class Group {
 
     @ManyToMany
     @JoinTable(name = "employees_groups_join_table",
-            joinColumns = {
-                @JoinColumn(name = "group_fk")
-            },
-            inverseJoinColumns = {
-                @JoinColumn(name = "employee_fk")
-            }
+            joinColumns = @JoinColumn(name = "group_fk", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_fk", referencedColumnName = "id")
     )
     private Set<Employee> employees = new LinkedHashSet<>();
 }

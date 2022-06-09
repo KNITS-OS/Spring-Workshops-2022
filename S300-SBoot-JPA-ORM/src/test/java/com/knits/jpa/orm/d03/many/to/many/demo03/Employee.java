@@ -1,8 +1,10 @@
-package com.knits.jpa.orm.d03.many.to.many.demo01;
+package com.knits.jpa.orm.d03.many.to.many.demo03;
 
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -16,6 +18,9 @@ public class Employee {
     private String firstName;
 
     private String lastName;
+
+    @OneToMany(mappedBy = "employee")
+    private Set<EmployeeGroup> groups = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object o) {
