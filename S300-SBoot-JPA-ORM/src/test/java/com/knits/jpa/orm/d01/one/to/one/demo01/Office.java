@@ -17,4 +17,5 @@ public class Office {
 
     private String street;
 
+
 }
