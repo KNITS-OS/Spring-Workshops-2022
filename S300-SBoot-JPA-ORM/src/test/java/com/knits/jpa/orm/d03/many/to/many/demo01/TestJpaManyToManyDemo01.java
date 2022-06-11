@@ -1,6 +1,8 @@
 package com.knits.jpa.orm.d03.many.to.many.demo01;
 
+import com.knits.jpa.orm.d02.one.to.many.demo04.bidirectionalJoinTable.Project;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -31,9 +33,9 @@ public class TestJpaManyToManyDemo01 {
 
     @Test
     @Rollback(value = false)
-    public void initDatabase(){
+    public void initDatabase() {
 
-        Employee employee= new Employee();
+        Employee employee = new Employee();
         employee.setFirstName("Stefano");
         employee.setLastName("Fiorenza");
 
@@ -65,11 +67,12 @@ public class TestJpaManyToManyDemo01 {
         employeeRepository.save(employee2);
         employeeRepository.save(employee3);
 
-        Group savedGroup =groupRepository.save(group);
+        Group savedGroup = groupRepository.save(group);
         groupRepository.save(group2);
 
-        log.info("Employees for Group: {} ",savedGroup.getName());
-        savedGroup.getEmployees().forEach(emp -> log.info("Employee Found: {} ",emp.getFirstName()));
+        log.info("Employees for Group: {} ", savedGroup.getName());
+        savedGroup.getEmployees().forEach(emp -> log.info("Employee Found: {} ", emp.getFirstName()));
 
     }
+
 }
