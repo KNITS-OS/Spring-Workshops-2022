@@ -1,12 +1,16 @@
 package com.knits.jpa.queries;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.knits.jpa.queries.dto.EmployeeDto;
+import com.knits.jpa.queries.dto.search.EmployeeSearchDto;
 import com.knits.jpa.queries.model.Country;
 import com.knits.jpa.queries.model.Employee;
 import com.knits.jpa.queries.model.Office;
 import com.knits.jpa.queries.repository.CountryRepository;
 import com.knits.jpa.queries.repository.EmployeeRepository;
 import com.knits.jpa.queries.repository.OfficeRepository;
+import com.knits.jpa.queries.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
@@ -21,6 +27,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,13 +35,14 @@ import java.util.List;
 @DataJpaTest
 @EntityScan("com.knits.jpa.queries.model") //otherwise finds all other entities in subpackages
 @EnableJpaRepositories("com.knits.jpa.queries.repository") //otherwise doesnt create jpa repositories instances
+@ComponentScan(basePackages = "com.knits.jpa.queries")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
-        "spring.datasource.url=jdbc:postgresql://localhost:5432/JPA-ORM-04"
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/JPA-ORM-05"
 })
 @Slf4j
-public class TestJpaQueries {
+public class TestSpecificationQueries {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -44,6 +52,9 @@ public class TestJpaQueries {
 
     @Autowired
     private CountryRepository countryRepository;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     //@Test
     @Rollback(value = false)
@@ -75,70 +86,31 @@ public class TestJpaQueries {
 
     @Test
     @Rollback(value = false)
-    //@Sql("/data/employees.sql")
+    @Sql("/data/employees.sql")
     public void testWithSqlInput(){
 
 
-       // connectEmployeesWithOffices();
+        connectEmployeesWithOffices();
 
+        EmployeeSearchDto searchByLastName = EmployeeSearchDto.builder()
+                .lastName("Foltin")
+                .build();
+        testTemplate(1,searchByLastName);
 
-        /* Derived queries, JPQL */
-
-
-        //1) Basics
-
-        /*
-        Long employeeCount =employeeRepository.count();
-        assertThat(employeeCount).isGreaterThan(0L);
-
-
-        List<Employee> employees = employeeRepository.getByFirstName("Joya");
-        verifyResultsetAndLogFirst(employees);
-        */
-
-        List<Employee> employees = employeeRepository.findByFirstName("Ceil");
-        verifyResultsetAndLogFirst(employees);
-
-
-       //2) Nested
-        /*
-       List<Employee> employees = employeeRepository.findByOffice_Country_Iso2("EE");
-       log.info("found {}",employees.size());
-       verifyResultsetAndLogFirst(employees);
-        */
-
-
-        /* Custom queries, JPQL */
-
-        //1) With positional parameter
-        /*
-        List<Employee> employees = employeeRepository.findEmployeesByFirstName("Joya");
-        log.info("found {}",employees.size());
-        verifyResultsetAndLogFirst(employees);
-        */
-
-        //2) With named parameter
-        /*
-
-        List<Employee> employees = employeeRepository.findEmployeesByFirstNameWithParameter("Joya");
-        log.info("found {}",employees.size());
-        verifyResultsetAndLogFirst(employees);
-         */
-
-        //3) nested query (join)
-        /*
-        List<Employee> employees = employeeRepository.findByIso2("EE");
-        log.info("found {}",employees.size());
-        verifyResultsetAndLogFirst(employees);
-        */
-
-
-
-
+        List<Office> officesInTallinn =officeRepository.findByIso2("EE");
+        Long countryId =officesInTallinn.get(0).getCountry().getId();
+        EmployeeSearchDto searchByCountryId = EmployeeSearchDto.builder()
+                .countryId(countryId)
+                .build();
+        testTemplate(250,searchByCountryId);//according to connectEmployeesWithOffices() 1000/4=250
 
     }
 
 
+    private void testTemplate (int expectedResultsetSize, EmployeeSearchDto employeeSearch) {
+        Page<EmployeeDto> pageOfEmployees = employeeService.search(employeeSearch);
+        assertThat(pageOfEmployees.getContent().size()).isEqualTo(expectedResultsetSize);
+    }
 
     private void connectEmployeesWithOffices(){
 
@@ -155,19 +127,20 @@ public class TestJpaQueries {
         List<Country>  countries = List.of(countryEE,countryIT,countryFR,countryDE);
         List<Office>  offices = List.of(officeInEE,officeInIT,officeInFR,officeInDE);
 
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> allEmployees= new ArrayList<>();
+        employeeRepository.findAll().iterator().forEachRemaining( (employee) ->allEmployees.add(employee));
 
         int counter=0;
 
-        for (int i=0; i<employees.size(); i++){
+        for (int i=0; i<allEmployees.size(); i++){
             if (counter==offices.size()){
                 counter=0;
             }
-            employees.get(i).setOffice(offices.get(counter));
+            allEmployees.get(i).setOffice(offices.get(counter));
             counter++;
         }
 
-        employeeRepository.saveAll(employees);
+        employeeRepository.saveAll(allEmployees);
     }
 
 
