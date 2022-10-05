@@ -1,6 +1,6 @@
 package com.knits.product.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +10,11 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "\"user\"") //user is a reserved word in postgres sql
+@RequiredArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
+@Builder
 @Data
 public class User implements Serializable {
 
