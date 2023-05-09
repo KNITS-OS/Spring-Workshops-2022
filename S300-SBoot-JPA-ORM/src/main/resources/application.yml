@@ -17,8 +17,8 @@ spring:
     debug: enabled
 
   datasource:
-    username: "knits-orm"
-    password: "jpa-tutorial"
+    username: "postgres"
+    password: "postgres"
 
   jpa:
     database: postgresql
