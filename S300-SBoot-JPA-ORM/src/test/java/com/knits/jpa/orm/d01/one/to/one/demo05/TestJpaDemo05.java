@@ -1,33 +1,29 @@
-package com.knits.jpa.orm.d01.one.to.one.demo01;
+package com.knits.jpa.orm.d01.one.to.one.demo05;
 
 import com.github.javafaker.Faker;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-// One to one with foreign key
+// One to one bidirectional relationship join table
 
 @DataJpaTest
-@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo01") //otherwise finds all other entities in subpackages
-@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo01") //otherwise doesnt create jpa repositories instances
+@EntityScan("com.knits.jpa.orm.d01.one.to.one.demo05") //otherwise finds all other entities in subpackages
+@EnableJpaRepositories("com.knits.jpa.orm.d01.one.to.one.demo05") //otherwise doesnt create jpa repositories instances
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
         "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_data_orm"
 })
-public class TestJpaDemo01 {
+public class TestJpaDemo05 {
     @Autowired
     private EmployeeRepository userRepository;
 
@@ -90,16 +86,16 @@ public class TestJpaDemo01 {
 
     @Test
     @Rollback(value = false)
-    public void updateUserByOffice() {
+    public void updateOfficeByUser() {
         Faker faker = new Faker();
 
         Map<String, Object> created = createFakeEmployeeAndOffice();
 
-        // get saved office
-        Office office = (Office) created.get("office");
+        // get saved employee
+        Employee user = (Employee) created.get("user");
 
         // find the office that belongs to him
-        Employee user = userRepository.getEmployeeByOffice(office);
+        Office office = user.getOffice();
 //        System.out.println(user.getFirstName());
 
         // update it
@@ -109,14 +105,14 @@ public class TestJpaDemo01 {
 
     @Test
     @Rollback(value = false)
-    public void deleteUserByOffice() {
+    public void deleteOfficeByUser() {
         Map<String, Object> created = createFakeEmployeeAndOffice();
 
-        // get saved office
-        Office office = (Office) created.get("office");
+        // get saved employee
+        Employee user = (Employee) created.get("user");
 
         // find the office that belongs to him
-        Employee user = userRepository.getEmployeeByOffice(office);
+        Office office = user.getOffice();
 //        System.out.println(user.getId());
 
         // delete it
@@ -125,14 +121,14 @@ public class TestJpaDemo01 {
 
     @Test
     @Rollback(value = false)
-    public void findUserByOffice() {
+    public void findOfficeByUser() {
         Map<String, Object> created = createFakeEmployeeAndOffice();
 
-        // get saved user
-        Office office = (Office) created.get("office");
+        // get saved employee
+        Employee user = (Employee) created.get("user");
 
         // find the office that belongs to him
-        Employee user = userRepository.getEmployeeByOffice(office);
+        Office office = user.getOffice();
 //        System.out.println(user.toString());
     }
 }

@@ -1,8 +1,9 @@
-package com.knits.jpa.orm.d03.many.to.many.demo01;
+package com.knits.jpa.orm.d02.one.to.many.demo02;
 
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Data

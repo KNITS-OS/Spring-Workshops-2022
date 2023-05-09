@@ -1,4 +1,4 @@
-package com.knits.jpa.orm.d02.one.to.many.demo01;
+package com.knits.jpa.orm.d02.one.to.many.demo02;
 
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
@@ -17,18 +16,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-// one to many foreign key
+// one to many with link table
 
 @DataJpaTest
-@EntityScan("com.knits.jpa.orm.d02.one.to.many.demo01")
-@EnableJpaRepositories("com.knits.jpa.orm.d02.one.to.many.demo01")
+@EntityScan("com.knits.jpa.orm.d02.one.to.many.demo02")
+@EnableJpaRepositories("com.knits.jpa.orm.d02.one.to.many.demo02")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update",
         "spring.datasource.url=jdbc:postgresql://localhost:5432/spring_data_orm_2"
 })
 @Slf4j
-public class TestJpaOneToManyDemo01 {
+public class TestJpaOneToManyDemo02 {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -52,7 +51,7 @@ public class TestJpaOneToManyDemo01 {
             employee.setLastName(faker.name().lastName());
 
             // connect
-            employee.setProject(project);
+            project.getEmployees().add(employee);
 
             // save and add to the set
             employees.add(employeeRepository.save(employee));
@@ -61,7 +60,7 @@ public class TestJpaOneToManyDemo01 {
         Project savedProject = projectRepository.save(project);
 
         log.info("Employees for Project: {} ",savedProject.getName());
-        employeeRepository.findAllByProject(savedProject)
+        savedProject.getEmployees()
                 .forEach(emp -> log.info("Employee Found: {} ", emp.getFirstName()));
 
         return new HashMap<>() {{
@@ -84,15 +83,15 @@ public class TestJpaOneToManyDemo01 {
         employee2.setFirstName("Luna");
         employee2.setLastName("Doria");
 
-        employee.setProject(project);
-        employee2.setProject(project);
+        project.getEmployees().add(employee);
+        project.getEmployees().add(employee2);
 
         employeeRepository.save(employee);
         employeeRepository.save(employee2);
         Project savedProject = projectRepository.save(project);
 
         log.info("Employees for Project: {} ",savedProject.getName());
-        employeeRepository.findAllByProject(savedProject)
+        savedProject.getEmployees()
                 .forEach(emp -> log.info("Employee Found: {} ",emp.getFirstName()));
     }
 
@@ -106,11 +105,10 @@ public class TestJpaOneToManyDemo01 {
         Project project = (Project) created.get("project");
 
         // update
-        Set<Employee> employees = employeeRepository.findAllByProject(project);
-        if (employees.isEmpty())
+        if (project.getEmployees().isEmpty())
             return;
 
-        Employee employee = employees.iterator().next();
+        Employee employee = project.getEmployees().iterator().next();
         log.info("Employee name: {}", employee.getFirstName());
 
         employee.setFirstName(faker.name().firstName());
@@ -128,19 +126,20 @@ public class TestJpaOneToManyDemo01 {
         Project project = (Project) created.get("project");
 
         // delete
-        Set<Employee> employees = employeeRepository.findAllByProject(project);
-        if (employees.isEmpty())
+        if (project.getEmployees().isEmpty())
             return;
 
-        Employee employee = employees.iterator().next();
+        Employee employee = project.getEmployees().iterator().next();
         log.info("Employee name to be removed: {}, id: {}",
                 employee.getFirstName(), employee.getId());
 
-        employees.remove(employee);
+        project.getEmployees().remove(employee);
         employeeRepository.delete(employee);
-
-        if (employees.size() == 0)
+        if (project.getEmployees().size() == 0) {
             projectRepository.delete(project);
+            return;
+        }
+        projectRepository.save(project);
     }
 
     @Test
@@ -152,8 +151,7 @@ public class TestJpaOneToManyDemo01 {
         Project project = (Project) created.get("project");
 
         // find
-        Set<Employee> employees = employeeRepository.findAllByProject(project);
-        Employee employee = employees.iterator().next();
+        Employee employee = project.getEmployees().iterator().next();
         log.info("Employee name: {}", employee.getFirstName());
     }
 }

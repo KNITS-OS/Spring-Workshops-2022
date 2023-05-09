@@ -1,4 +1,4 @@
-package com.knits.jpa.orm.d03.many.to.many.demo01;
+package com.knits.jpa.orm.d02.one.to.many.demo02;
 
 import lombok.Data;
 
@@ -7,9 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="\"group\"") //group is a reserved word in sql
 @Data
-public class Group {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -18,10 +17,10 @@ public class Group {
 
     private String name;
 
-    @ManyToMany
-    @JoinTable(name = "employees_groups_join_table",
+    @OneToMany
+    @JoinTable(name = "project_employees_link_table",
             joinColumns = {
-                @JoinColumn(name = "group_fk")
+                @JoinColumn(name = "project_fk")
             },
             inverseJoinColumns = {
                 @JoinColumn(name = "employee_fk")
