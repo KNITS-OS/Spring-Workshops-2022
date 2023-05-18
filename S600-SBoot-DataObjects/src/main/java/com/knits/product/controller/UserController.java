@@ -1,6 +1,8 @@
 package com.knits.product.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.knits.product.dto.views.Views;
 import com.knits.product.exception.UserException;
 import com.knits.product.service.UserService;
 import com.knits.product.dto.UserDto;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @Slf4j
+@JsonView(Views.UserDetails.class)
 public class UserController {
 
     @Autowired
@@ -31,13 +34,13 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "/users/all", produces = {"application/json"})
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        log.debug("REST request to get all Users");
-        return ResponseEntity
-                .ok()
-                .body(userService.findAll());
-    }
+//    @GetMapping(value = "/users/all", produces = {"application/json"})
+//    public ResponseEntity<List<UserDto>> getAllUsers() {
+//        log.debug("REST request to get all Users");
+//        return ResponseEntity
+//                .ok()
+//                .body(userService.findAll());
+//    }
 
 
     @PostMapping(value = "/users", produces = {"application/json"}, consumes = { "application/json"})
@@ -86,8 +89,11 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserDto>> getAllUsers(Pageable pageable) {
-        throw new UnsupportedOperationException("getAllUsers(Pageable pageable) not implemented");
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        log.debug("REST request to get all Users");
+        return ResponseEntity
+                .ok()
+                .body(userService.findAll());
     }
 
 }

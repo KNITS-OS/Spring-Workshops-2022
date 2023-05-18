@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonView(Views.Common.class)
+@JsonView(Views.Public.class)
 public class ExceptionDto {
 
     private int code;

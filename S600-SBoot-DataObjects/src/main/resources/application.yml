@@ -44,4 +44,4 @@ logging:
   level:
     liquibase: INFO
 application:
-  init-data: true
+  init-data: false

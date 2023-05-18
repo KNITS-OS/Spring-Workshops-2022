@@ -1,6 +1,5 @@
 package com.knits.product.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.knits.product.dto.views.Views;
 import lombok.*;
@@ -13,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Builder
-@JsonView(Views.Common.class)
+@JsonView(Views.Public.class)
 public class GroupDto {
 
     private Long id;

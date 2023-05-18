@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Builder
-@JsonView(Views.Common.class)
+@JsonView(Views.Public.class)
 public class UserDto {
 
     @EqualsAndHashCode.Include
