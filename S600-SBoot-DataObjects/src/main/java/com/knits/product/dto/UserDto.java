@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Builder
-@JsonView(Views.Public.class)
+//@JsonView(Views.Public.class)
 public class UserDto {
 
     @EqualsAndHashCode.Include
@@ -32,7 +32,4 @@ public class UserDto {
     private String email;
 
     private Boolean active = true;
-
-    @JsonView(Views.UserDetails.class)
-    private List<GroupDto> groups;
 }

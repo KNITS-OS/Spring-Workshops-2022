@@ -6,7 +6,7 @@ import com.knits.product.model.User;
 import com.knits.product.repository.UserRepository;
 import com.knits.product.dto.UserDto;
 import com.knits.product.mapper.UserMapper;
-import com.knits.product.service.mapper.UserMapperImpl;
+import com.knits.product.mapper.UserMapperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

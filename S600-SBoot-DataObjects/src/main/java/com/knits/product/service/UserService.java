@@ -2,10 +2,13 @@ package com.knits.product.service;
 
 import com.knits.product.exception.ExceptionCodes;
 import com.knits.product.exception.UserException;
+//import com.knits.product.mapper.GroupMapper;
 import com.knits.product.model.User;
+//import com.knits.product.repository.GroupRepository;
 import com.knits.product.repository.UserRepository;
 import com.knits.product.dto.UserDto;
 import com.knits.product.mapper.UserMapper;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,14 +25,15 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@AllArgsConstructor
 @Slf4j
 public class UserService {
 
-    @Autowired
     private UserMapper userMapper;
 
-    @Autowired
+    //private GroupMapper groupMapper;
     private UserRepository userRepository;
+
 
     /**
      * Save a employee.
@@ -79,7 +83,11 @@ public class UserService {
     }
 
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
+         return userRepository.findAll().stream().map( (user) -> {
+            UserDto userDto =userMapper.toDto(user);
+          //  userDto.setGroups(groupMapper.toDtoList(user.getGroups()));
+            return userDto;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -92,7 +100,9 @@ public class UserService {
 
         log.debug("Request User by id : {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> new UserException("User#" + id + " not found", ExceptionCodes.USER_NOT_FOUND));
-        return userMapper.toDto(user);
+        UserDto userDto =userMapper.toDto(user);
+       // userDto.setGroups(groupMapper.toDtoList(user.getGroups()));
+        return userDto;
     }
 
     /**

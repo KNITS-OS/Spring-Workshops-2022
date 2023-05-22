@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @Slf4j
-@JsonView(Views.UserDetails.class)
+//@JsonView(Views.UserDetails.class)
 public class UserController {
 
     @Autowired

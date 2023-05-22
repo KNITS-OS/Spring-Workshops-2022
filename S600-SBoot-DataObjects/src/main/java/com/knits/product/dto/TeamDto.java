@@ -13,14 +13,14 @@ import java.util.List;
 @ToString
 @Builder
 @JsonView(Views.Public.class)
-public class GroupDto {
+public class TeamDto {
 
     private Long id;
     private String name;
     private String description;
     private Boolean active = false;
 
-    @JsonView(Views.GroupDetails.class)
+    @JsonView(Views.TeamDetails.class)
     private List<UserDto> users;
 
 }

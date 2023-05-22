@@ -43,13 +43,7 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private Boolean active = false;
-
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "User_Group",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "group_id") }
-    )
-    private List<Group> groups;
+    @ManyToOne
+    private Team team;
 
 }

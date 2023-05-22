@@ -11,8 +11,10 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "\"group\"") //group is a reserved word in sql
-public class Group {
+@Table(name = "\"team\"") // "team" is used as the table name
+@NamedEntityGraph(name = "Team.users",
+        attributeNodes = @NamedAttributeNode("users"))
+public class Team {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "sequenceGenerator")
@@ -25,7 +27,7 @@ public class Group {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "groups")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team")
     private List<User> users;
 
     @Column(nullable = false)

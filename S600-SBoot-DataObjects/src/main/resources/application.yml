@@ -20,7 +20,9 @@ spring:
     username: "knits"
     password: "ad1b0l4ad3b0l4$t3"
 
+
   jpa:
+    open-in-view: false
     database: postgresql
     hibernate:
       ddl-auto: update
