@@ -46,4 +46,10 @@ public class User implements Serializable {
     @ManyToOne
     private Team team;
 
+//    public void setTeam(Team team) {
+//        this.team=team;
+//        this.team.getUsers().add(this);
+//        // this.team.addUser(this); //this will cause cycle
+//    }
+
 }

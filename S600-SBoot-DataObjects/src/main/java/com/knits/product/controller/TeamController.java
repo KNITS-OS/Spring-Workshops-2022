@@ -1,15 +1,12 @@
 package com.knits.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.knits.product.dto.TeamDto;
-import com.knits.product.dto.views.Views;
 import com.knits.product.exception.UserException;
+import com.knits.product.model.JsonViews;
 import com.knits.product.model.Team;
 import com.knits.product.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,23 +15,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/teams")
 @Slf4j
-@JsonView(Views.Public.class)
 public class TeamController {
 
     @Autowired
     private TeamService teamService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeamDto> getTeamById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Team> getTeamById(@PathVariable(value = "id") Long id) {
         log.debug("REST request to get Team: {}", id);
-        TeamDto teamDto = teamService.findById(id);
-        return ResponseEntity.ok(teamDto);
+        Team team = teamService.findById(id);
+        return ResponseEntity.ok(team);
     }
 
     @GetMapping
-    public ResponseEntity<List<TeamDto>> getAllTeams() {
+    @JsonView(JsonViews.TeamDetails.class)
+    public ResponseEntity<List<Team>> getAllTeams() {
         log.debug("REST request to get all Teams");
-        List<TeamDto> teamDtoList = teamService.findAll();
+        List<Team> teamDtoList = teamService.findAll();
         return ResponseEntity.ok(teamDtoList);
     }
 
@@ -46,36 +43,30 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<TeamDto> createTeam(@RequestBody TeamDto teamDto) {
+    public ResponseEntity<Team> createTeam(@RequestBody Team team) {
         log.debug("REST request to create Team");
-        if (teamDto == null) {
+        if (team == null) {
             throw new UserException("Team data is missing");
         }
-        TeamDto createdTeamDto = teamService.save(teamDto);
+        Team createdTeamDto = teamService.save(team);
         return ResponseEntity.ok(createdTeamDto);
     }
 
     @PutMapping
-    public ResponseEntity<TeamDto> updateTeam(@RequestBody TeamDto teamDto) {
+    public ResponseEntity<Team> updateTeam(@RequestBody Team team) {
         log.debug("REST request to update Team");
-        if (teamDto == null) {
-            throw new UserException("Team data is missing");
-        }
-        TeamDto updatedTeamDto = teamService.update(teamDto);
-        return ResponseEntity.ok(updatedTeamDto);
+        Team updatedTeam = teamService.update(team);
+        return ResponseEntity.ok(updatedTeam);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TeamDto> partialUpdateTeam(
+    public ResponseEntity<Team> partialUpdateTeam(
             @PathVariable("id") Long id,
-            @RequestBody TeamDto teamDto
+            @RequestBody Team team
     ) {
         log.debug("REST request to partially update Team");
-        if (teamDto == null) {
-            throw new UserException("Team data is missing");
-        }
-        teamDto.setId(id);
-        TeamDto updatedTeamDto = teamService.partialUpdate(teamDto);
+        team.setId(id);
+        Team updatedTeamDto = teamService.partialUpdate(team);
         return ResponseEntity.ok(updatedTeamDto);
     }
 
@@ -86,10 +77,4 @@ public class TeamController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<TeamDto>> searchTeams(Pageable pageable) {
-        log.debug("REST request to search Teams");
-        Page<TeamDto> teamDtoList = teamService.search(pageable);
-        return ResponseEntity.ok(teamDtoList);
-    }
 }

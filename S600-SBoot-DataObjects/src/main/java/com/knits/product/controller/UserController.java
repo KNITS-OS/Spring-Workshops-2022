@@ -1,99 +1,76 @@
 package com.knits.product.controller;
 
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.knits.product.dto.views.Views;
 import com.knits.product.exception.UserException;
+import com.knits.product.model.Team;
+import com.knits.product.model.User;
+import com.knits.product.service.TeamService;
 import com.knits.product.service.UserService;
-import com.knits.product.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @Slf4j
-//@JsonView(Views.UserDetails.class)
 public class UserController {
 
-    @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/users/{id}", produces = {"application/json"})
-    public ResponseEntity<UserDto> getUserById(@PathVariable(value = "id", required = true) final Long id) {
-
-        log.debug("REST request to get User : {}", id);
-        UserDto userFound = userService.findById(id);
-        return ResponseEntity
-                .ok()
-                .body(userFound);
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long id) {
+        log.debug("REST request to get User: {}", id);
+        User user = userService.findById(id);
+        return ResponseEntity.ok(user);
+    }
 
-//    @GetMapping(value = "/users/all", produces = {"application/json"})
-//    public ResponseEntity<List<UserDto>> getAllUsers() {
-//        log.debug("REST request to get all Users");
-//        return ResponseEntity
-//                .ok()
-//                .body(userService.findAll());
-//    }
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        log.debug("REST request to get all Users");
+        List<User> userList = userService.findAll();
+        return ResponseEntity.ok(userList);
+    }
 
-
-    @PostMapping(value = "/users", produces = {"application/json"}, consumes = { "application/json"})
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDTO) {
-        log.debug("REST request to createUser User ");
-        if (userDTO == null) {
-            throw new UserException("User data are missing");
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        log.debug("REST request to create User");
+        if (user == null) {
+            throw new UserException("User data is missing");
         }
-        return ResponseEntity
-                .ok()
-                .body(userService.save(userDTO));
+        User createdUser = userService.save(user);
+        return ResponseEntity.ok(createdUser);
     }
 
-    @PutMapping(value = "/users", produces = {"application/json"}, consumes = { "application/json"})
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDTO) {
-        log.debug("REST request to updateUser User ");
-        if (userDTO == null) {
-            throw new UserException("User data are missing");
-        }
-        return ResponseEntity
-                .ok()
-                .body(userService.update(userDTO));
+    @PutMapping
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        log.debug("REST request to update User");
+        User updatedUser = userService.update(user);
+        return ResponseEntity.ok(updatedUser);
     }
 
-    @PatchMapping(value = "/users/{id}",  produces = {"application/json"}, consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<UserDto> partialUpdateUser(
-            @PathVariable(value = "id", required = false) final Long id,
-            @RequestBody UserDto userDTO){
-        log.debug("REST request to updateUser User ");
-
-        if (userDTO == null) {
-            throw new UserException("User data are missing");
-        }
-        userDTO.setId(id);
-        return ResponseEntity
-                .ok()
-                .body(userService.partialUpdate(userDTO));
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> partialUpdateUser(
+            @PathVariable("id") Long id,
+            @RequestBody User user
+    ) {
+        log.debug("REST request to partially update User");
+        user.setId(id);
+        User updatedUser = userService.partialUpdate(user);
+        return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        log.debug("REST request to delete User : {}", id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+        log.debug("REST request to delete User: {}", id);
         userService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-
-    @GetMapping("/users")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        log.debug("REST request to get all Users");
-        return ResponseEntity
-                .ok()
-                .body(userService.findAll());
     }
 
 }

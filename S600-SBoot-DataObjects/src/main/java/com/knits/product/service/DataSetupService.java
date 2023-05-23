@@ -26,9 +26,7 @@ public class DataSetupService {
 
     @Transactional
     public void setup (){
-
-         // addUserToGroups(); //wrong, nothing will happen here...
-      //  addGroupsToUsers(); //correct user_group table updated
+        //addUserToTeams(); // Doesnt work Team doenst own relationship
         addTeamToUsers();
     }
 
@@ -43,52 +41,29 @@ public class DataSetupService {
                 counter = 0;
             }
 
-            List<Team> teamsToAddAsList = new ArrayList<>();
             user.setTeam(teams.get(counter));
             userRepository.save(user);
             counter++;
         }
     }
 
-//    private void addGroupsToUsers() {
-//        List<User> users =userRepository.findAll();
-//        List<Group> groups= groupRepository.findAll();
-//
-//        int counter=0;
-//
-//        for (User user : users){
-//            if (counter==groups.size()){
-//                counter=0;
-//            }
-//
-//            List<Group> groupsToAddAsList=new ArrayList<>();
-//            groupsToAddAsList.add(groups.get(counter));
-//            user.setGroups(groupsToAddAsList);
-//            userRepository.save(user);
-//            counter++;
-//        }
-//
-//    }
+    private void addUserToTeams() {
+        List<User> users = userRepository.findAll();
+        List<Team> teams = teamRepository.findAll();
+        int counter = 0;
 
+        for (Team team : teams) {
+            if (counter == users.size()) {
+                counter = 0;
+            }
 
-    //TODO (1) owner of relationship: this will not work
-//    private void addUserToGroups() {
-//        List<User> users =userRepository.findAll();
-//        List<Group> groups= groupRepository.findAll();
-//        int counter=0;
-//
-//        for (Group group : groups){
-//            if (counter==users.size()){
-//                counter=0;
-//            }
-//
-//            List<User> usersToAddAsList=new ArrayList<>();
-//            usersToAddAsList.add(users.get(counter));
-//            group.setUsers(usersToAddAsList);
-//            groupRepository.save(group);
-//            counter++;
-//        }
-//    }
+            List<User> usersToAddAsList = new ArrayList<>();
+            usersToAddAsList.add(users.get(counter));
+            team.setUsers(usersToAddAsList);
+            teamRepository.save(team);
+            counter++;
+        }
+    }
 
 
 }

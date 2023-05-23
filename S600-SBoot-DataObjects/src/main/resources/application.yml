@@ -16,7 +16,7 @@ spring:
     name: Product
     debug: enabled
   datasource:
-    url: "jdbc:postgresql://localhost:5432/product"
+    url: "jdbc:postgresql://localhost:5432/sboot-ws-6"
     username: "knits"
     password: "ad1b0l4ad3b0l4$t3"
 
