@@ -15,6 +15,7 @@ import java.util.List;
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
     //@EntityGraph(type= EntityGraph.EntityGraphType.FETCH, value="Team.users")
-    @Query("select distinct t from Team t inner join fetch t.users ")
-    List<Team> findWithUsers();
+   // @Query("select distinct t from Team t inner join fetch t.users ")
+   // @Query("select distinct t from Team t")
+    //List<Team> findAll();
 }

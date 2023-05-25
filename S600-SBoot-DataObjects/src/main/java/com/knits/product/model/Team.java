@@ -1,6 +1,7 @@
 package com.knits.product.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.knits.product.dto.Views;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,9 +14,9 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @Entity
 @Table(name = "\"team\"") // "team" is used as the table name
-@NamedEntityGraph(name = "Team.users",
-        attributeNodes = @NamedAttributeNode("users"))
-@JsonView(JsonViews.Public.class)
+//@NamedEntityGraph(name = "Team.users",
+//        attributeNodes = @NamedAttributeNode("users"))
+@JsonView(Views.Public.class)
 public class Team {
 
     @Id
@@ -29,8 +30,8 @@ public class Team {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team")
-    @JsonView(JsonViews.TeamDetails.class)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "team")
+    //@JsonView(Views.TeamDetails.class)
     private List<User> users;
 
     @Column(nullable = false)

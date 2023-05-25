@@ -1,6 +1,6 @@
-package com.knits.product.model;
+package com.knits.product.dto;
 
-public interface JsonViews {
+public interface Views {
 
     public static interface Public {}
     public static interface TeamDetails extends Public {}
