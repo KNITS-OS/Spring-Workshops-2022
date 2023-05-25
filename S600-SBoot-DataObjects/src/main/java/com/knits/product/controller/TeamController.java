@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.knits.product.dto.TeamDto;
 import com.knits.product.exception.UserException;
 import com.knits.product.dto.Views;
-import com.knits.product.mapper.JpaMapperUtils;
 import com.knits.product.mapper.TeamMapper;
 import com.knits.product.model.Team;
 import com.knits.product.service.TeamService;
@@ -37,10 +36,7 @@ public class TeamController {
     @JsonView(Views.TeamDetails.class)
     public ResponseEntity<List<TeamDto>> getAllTeams() {
         log.debug("REST request to get all Teams");
-        List<Team> teamList =teamService.findAll();
-        log.info("Initialized? Controller {}" ,JpaMapperUtils.isJpaInitialized(teamList.get(0).getUsers()));
-        List<TeamDto> teamDtoList =teamMapper.toDtoList(teamList) ;
-        return ResponseEntity.ok(teamDtoList);
+        return ResponseEntity.ok(teamService.findAll());
     }
 
     @PostMapping

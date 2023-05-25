@@ -3,6 +3,7 @@ package com.knits.product.mapper;
 import org.hibernate.Hibernate;
 import org.mapstruct.*;
 
+import javax.persistence.Persistence;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ public interface EntityMapper<E, D> {
 
     @Named("update")
     void update(@MappingTarget E entity,  D dto);
+
 
 
 }

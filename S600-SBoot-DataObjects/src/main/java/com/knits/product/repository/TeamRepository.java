@@ -13,9 +13,13 @@ import java.util.List;
  * Spring Data JPA repository for the {@link User} entity.
  */
 public interface TeamRepository extends JpaRepository<Team, Long> {
+    @Query("select distinct t from Team t inner join fetch t.users ")
+    List<Team> findAllWithUsers();
 
-    //@EntityGraph(type= EntityGraph.EntityGraphType.FETCH, value="Team.users")
-   // @Query("select distinct t from Team t inner join fetch t.users ")
-   // @Query("select distinct t from Team t")
-    //List<Team> findAll();
+    @EntityGraph(type= EntityGraph.EntityGraphType.FETCH, value="Team.users")
+    @Query("select distinct t from Team t")
+    List<Team> findAllWithUsersEntityGraph();
+
+    @Query("select distinct t from Team t")
+    List<Team> findAll();
 }

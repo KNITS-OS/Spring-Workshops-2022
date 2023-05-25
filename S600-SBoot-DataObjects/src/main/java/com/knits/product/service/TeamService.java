@@ -4,7 +4,6 @@ import com.knits.product.dto.TeamDto;
 import com.knits.product.dto.UserDto;
 import com.knits.product.exception.ExceptionCodes;
 import com.knits.product.exception.UserException;
-import com.knits.product.mapper.JpaMapperUtils;
 import com.knits.product.mapper.TeamMapper;
 import com.knits.product.mapper.UserMapper;
 import com.knits.product.model.Team;
@@ -104,11 +103,9 @@ public class TeamService {
         return teamMapper.toDto(teamRepository.save(team));
     }
 
-    public List<Team> findAll() {
-//        List<Team> teams =teamRepository.findAll();
-//        log.info ("Initialized ?, {}", JpaMapperUtils.isJpaListInitialized(teams.get(0).getUsers()));
-//        return teamMapper.toDtoList(teams);
-        return teamRepository.findAll();
+    public List<TeamDto> findAll() {
+        log.debug("Request to findAll Teams");
+        return teamMapper.toDtoList(teamRepository.findAll());
     }
 
 

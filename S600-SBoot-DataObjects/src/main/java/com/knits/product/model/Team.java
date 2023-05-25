@@ -14,8 +14,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @Entity
 @Table(name = "\"team\"") // "team" is used as the table name
-//@NamedEntityGraph(name = "Team.users",
-//        attributeNodes = @NamedAttributeNode("users"))
+@NamedEntityGraph(name = "Team.users",
+        attributeNodes = @NamedAttributeNode("users"))
 @JsonView(Views.Public.class)
 public class Team {
 
