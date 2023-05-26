@@ -33,5 +33,5 @@ public class UserDto {
     private Boolean active = true;
 
     @JsonView(Views.UserDetails.class)
-    private List<TeamDto> teams;
+    private TeamDto team;
 }

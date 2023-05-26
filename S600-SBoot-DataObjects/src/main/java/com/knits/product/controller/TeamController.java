@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/teams")
 @Slf4j
+@JsonView(Views.Public.class)
 public class TeamController {
 
     @Autowired

@@ -8,7 +8,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.WARN)
+        unmappedTargetPolicy = ReportingPolicy.WARN,
+        uses={TeamMapper.class})
 public interface UserMapper extends EntityMapper<User, UserDto>{
+
+    @Override
+    UserDto toDto(User entity);
 }
 

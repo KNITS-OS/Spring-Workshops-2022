@@ -23,4 +23,7 @@ public class TeamDto {
 
     @JsonView(Views.TeamDetails.class)
     private List<UserDto> users;
+
+    @JsonView(Views.TeamDetails.class)
+    private List<Long> userIds;
 }
